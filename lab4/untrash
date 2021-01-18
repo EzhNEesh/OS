@@ -1,0 +1,38 @@
+#!/bin/bash
+if [[ $# != 1 ]]; then echo "Wrong number of arguments"; exit 1; fi
+if [[ $1 == *"/"* ]]; then echo "The file name contains the path:"; exit 1; fi
+if [[ ! -f ~/.trash.log ]]; then echo "Logs gile doesn't exists"; exit 1; fi
+if [[ ! -s ~/.trash.log ]]; then echo "Logs file is empty"; exit 1; fi
+if [[ ! -d ~/.trash ]]; then echo "Dir trash doesn't exists"; exit 1; fi
+if [[ ! -s ~/.trash ]]; then echo "Dir trash is empty"; exit 1; fi
+for str in $(cat ~/.trash.log)
+do
+	file=$(echo $str | awk -F "::" '{print $2}' | awk -F ":" '{print $2}')
+	if [[ $file == */$1 ]];
+	then
+		echo "Do you want restore $file?"
+		echo "Yes or No"
+		read answer
+		if [[ $answer == "Yes" ]];
+		then
+			link_name=$(echo $str | awk -F "::" '{print $3}' | awk -F ":" '{print $2":"$3":"$4}')
+			dir=$(echo ${file%/*}/ | sed 's/.$//')
+			if [[ -d $dir ]];
+			then
+				ln ~/.trash/$link_name $dir/$1
+				echo "File restored"
+			else
+				ln ~/.trash/$link_name ~/$1
+				echo "Dir deleted. You can find file in home dir"
+			fi
+			grep -v "$str" ~/.trash.log > buf
+			rm ~/.trash.log
+			cp buf ~/.trash.log
+			rm ~/.trash/$link_name
+			rm buf
+			exit 0
+		fi
+	fi
+done
+echo "File didn't find"
+exit 1

@@ -1,0 +1,16 @@
+#!/bin/bash
+if [[ $# != 1 ]]
+then
+	echo "Wrong number of arguments"
+	exit 1
+fi
+if [[ ! -f $1 ]]
+then
+	echo "File doesn't exist"
+	exit 1
+fi
+mkdir ~/.trash 2> /dev/null
+time=$(date +%F_%R:%S)
+ln $1 ~/.trash/$time
+echo "$time::deleted_file:$PWD/$1::link_name:$time" >> ~/.trash.log
+rm $1

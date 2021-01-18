@@ -1,0 +1,10 @@
+#!/bin/bash
+rm full.log
+touch full.log
+while read str
+do
+	if [[ "$str" == *"(II)"* ]] || [[ "$str" == *"(WW)"* ]]
+	then
+		echo $str | sed 's/(II)/Information/' | sed 's/(WW)/Warning/'
+	fi >> full.log
+done < /var/log/anaconda/X.log

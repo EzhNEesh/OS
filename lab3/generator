@@ -1,0 +1,15 @@
+#!/bin/bash
+rm log.txt
+touch log.txt
+while true; do
+	count=$(wc log.txt | awk '{print $1}')
+	case $count in
+	11)
+		kill -USR1 $(cat .pid)
+		exit 1
+		;;
+	*)
+		:
+		;;
+	esac
+done

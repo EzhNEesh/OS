@@ -1,0 +1,10 @@
+#!/bin/bash
+rm info.log
+touch info.log
+while read str
+do
+if [[ "${str:13:4}" == *"INFO"* ]]
+then
+echo $str
+fi >> info.log
+done < /var/log/anaconda/syslog

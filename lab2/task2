@@ -1,0 +1,4 @@
+#!/bin/bash
+rm t2.txt
+touch t2.txt
+ps -Ao pid,comm | grep /sbin > t2.txt

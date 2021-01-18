@@ -1,0 +1,28 @@
+#!/bin/bash
+file=$1
+while [ 1 ]
+do
+echo "Menu"
+echo "1. Open nano"
+echo "2. Open vi"
+echo "3. Open links"
+echo "4. Exit"
+echo "Enter the command: "
+read k
+case $k in
+1 )
+/usr/bin/nano $file
+;;
+2 )
+/usr/bin/vi $file
+;;
+3 )
+/usr/bin/links $file
+;;
+4 )
+break
+;;
+*)
+echo "uknown kommand"
+esac
+done

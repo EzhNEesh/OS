@@ -1,0 +1,2 @@
+#!/bin/bash
+ps -Ao pid,pri,stat | awk '$2>20' | grep -w "S" > check.txt

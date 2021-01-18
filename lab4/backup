@@ -1,0 +1,50 @@
+#!/bin/bash
+[ -d ~/source ] || { echo "Source doesn't exist"; exit 1; }
+datenow=$(date +%F)
+lastback=$(ls ~/ | grep -E "Backup-[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}" | sort -n -r | head -n 1)
+datelastback=$(echo $lastback | sed "s/Backup-//")
+difdate=$((datenow - datelastback))
+if [[ $difdate > 7 || ! $lastback ]];
+then
+	newdir=~/Backup-$datenow
+	mkdir $newdir
+	for i in $(ls ~/source)
+	do
+		touch $newdir/$i
+		cp ~/source/$i $newdir/$i
+	done
+	echo "Created Backup $newdir : $datenow" >> ~/backup-report
+	for i in $(ls ~/source)
+	do
+		echo "Copyed file : ~/source/$i" >> ~/backup-report
+	done
+	echo "" >> ~/backup-report
+else
+	touch buf
+	echo "Backup ~/$lastback changed : $datenow" >> ~/backup-report
+	for i in $(ls ~/source)
+	do
+		if [[ ! -f ~/$lastback/$i ]];
+		then
+			touch ~/$lastback/$i
+			cp ~/source/$i ~/$lastback/$i
+			echo "Copyed file : ~/source/$i" >> ~/backup-report
+		else
+			sizefile=$(wc -c ~/source/$i | awk '{print $1}')
+			sizecopy=$(wc -c ~/$lastback/$i | awk '{print $1}')
+			if [[ "$sizefile" != "$sizecopy" ]]
+			then
+				newname="$i.$datenow"
+				touch ~/$lastback/$newname
+				cp ~/source/$i ~/$lastback/$newname
+				echo "Changed file : ~/source/$newname" >> buf
+			fi
+		fi
+	done
+	while read str
+	do
+		echo $str >> ~/backup-report
+	done < buf
+	echo "" >> ~/backup-report
+	rm buf
+fi

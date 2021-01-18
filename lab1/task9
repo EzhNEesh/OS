@@ -1,0 +1,17 @@
+#!/bin/bash
+rm buf
+touch buf
+find /var/log -maxdepth 1 -name "*.log" > buf
+rm buf2
+touch buf2
+while read str
+do
+	awk 'END { print NR}' $str > buf2
+done < buf
+while read str
+do
+	let COUNT=$COUNT+$str
+done < buf2
+echo $COUNT
+rm buf
+rm buf2

@@ -1,0 +1,8 @@
+#!/bin/bash
+str=$(date +%F)'_'$(date +%R)
+mkdir /home/user/test && {
+echo "catalog test was created successfully" > ~/report.txt;
+touch /home/user/test/"$str"; }
+
+ping -c 3 www.net_nikogo.ru ||
+echo "$(date +F) $(date +R) the host not available" >> ~/report.txt

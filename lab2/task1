@@ -1,0 +1,3 @@
+#!/bin/bash
+ps u | grep 'user' | wc -l > t1.txt
+ps u | grep 'user' | awk '{print $1":"$2}' >> t1.txt

@@ -1,0 +1,19 @@
+#!/bin?bash
+max=0
+for pid in $(ps aux | awk 'FNR > 1 {print $2}');
+do
+	if [[ -r /proc/$pid/status ]];
+	then
+		a=$(grep -i "VmRSS" /proc/$pid/status | awk '{print $2}')
+		if [[ $a -ne "" ]];
+		then
+			if [[ $a -gt "$max" ]];
+			then
+				res=$pid
+				max=$a
+			fi
+		fi
+	fi
+done
+echo "Max_Memory="$max" : Proces with PID="$pid
+top -bo RES | head -n8 | tail -n1 | awk '{print "Max_Memory="$6" : PID="$1}'

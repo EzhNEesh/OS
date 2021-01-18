@@ -1,0 +1,20 @@
+#!/bin/bash
+touch t4.txt
+for pid in $(ps -Ao pid | tail -n +2)
+do
+f="/proc/"$pid
+ppid=$(grep -Ehsi "ppid:\s(.+)" $f"/status" | grep -o "[0-9]\+")
+ser=$(grep -Ehsi "sum_exec_runtime(.+):\s+(.+)" $f/shed | awk '{print $3}')
+ns=$(grep -Ehsi "nr_switches(.+):\s+(.+)" $f/shed | awk '{print $3}')
+if [ -z $ppid ]
+then
+ppid=0
+fi
+if [ -z $ser ] || [ -z $ns ]
+then
+art=0
+else
+let art=$ser/$ns
+fi
+echo "$pid $ppid $art"
+done | sort -nk2 | awk '{print "ProcessID="$1" : Parent_ProcessID="$2" : Average_Running_TIme="$3}' > t4.txt

@@ -1,0 +1,29 @@
+#!/bin/bash
+if [[ $# != 2 ]]; then echo "Count of arguments < 2"; exit 1; fi
+case $2 in
+	"check")
+		if [[ ! -d .hiden ]]; then mkdir .hiden; fi
+		filename=$(echo $1 | awk -F "/" '{print $ NF}')
+		if [[ ! -f .hiden/$filename ]];
+		then
+			cp $1 .hiden
+		else
+			echo "$(diff $1 .hiden/$filename)" >> .hiden/$filename.log
+		fi
+		exit 0
+	;;
+	"Recover")
+		filename=$(echo $1 | awk -F "/" '{print $ NF}')
+		if [[ ! -f .hiden/$filename ]];
+		then
+			echo "File doesn't exist in .hiden"
+			exit 1
+		fi
+		rm $1
+		ln .hiden/$filename $1
+		exit 0
+	;;
+	*)
+	echo "Uknown command"
+	exit 1
+esac

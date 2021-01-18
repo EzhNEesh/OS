@@ -1,0 +1,36 @@
+#!/bin/bash
+op="+"
+res=1
+(tail -f pipe) |
+while true; do
+	read LINE;
+	case $LINE in
+		QUIT)
+			echo "exit"
+			echo "result = $res"
+			killall tail
+			killall bash
+			exit
+			;;
+		"+")
+			op="+"
+			;;
+		UMN)
+			op="*"
+			;;
+		[0-9]*)
+			if [[ $op == "+" ]];
+			then
+				let res=$res+$LINE
+			else
+				let res=$res*$LINE
+			fi
+			;;
+		*)
+			echo "Incorrect value"
+			killall tail
+			killall bash
+			exit
+			;;
+		esac
+done

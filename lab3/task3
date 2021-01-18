@@ -1,0 +1,5 @@
+#!/bin/bash
+crontab -l > copy.txt
+echo "*/5 * * * 1 ~/labs/lab3/task1" >> copy.txt
+crontab copy.txt
+rm copy.txt

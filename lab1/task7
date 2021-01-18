@@ -1,0 +1,20 @@
+#!/bin/bash
+rm buf1
+rm buf2
+touch buf1
+touch buf2
+rm emails.lst
+touch emails.lst
+grep -r "@*.com" /etc | sed 's/[[:space:]]/\n/g' >> buf1
+grep -r "@" buf1 >> buf2
+rm buf1
+touch buf1
+grep -r ".com" buf2 >> buf1
+while read str
+do
+	STR+=$str
+	STR="$STR, "
+done < buf1
+echo $STR >> emails.lst
+rm buf1
+rm buf2

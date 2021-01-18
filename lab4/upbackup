@@ -1,0 +1,15 @@
+#!/bain/bash
+lastback=$(ls ~/ | grep -E "Backup-[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}" | sort -n -r | head -n 1)
+if [[ ! -d ~/$lastback ]]; then echo "Backup doesn't exist"; exit 1; fi
+[ -d ~/restore ] && rm -rf ~/restore
+mkdir ~/restore
+for i in $(ls ~/$lastback)
+do
+	lastversion=$(ls ~/$lastback | grep -E "$i.[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}" | sort -n -r | head -n 1)
+	if [[ $lastversion != "" ]];
+	then
+		cp ~/$lastback/$lastversion ~/restore
+	else
+		cp ~/$lastback/$i ~/restore
+	fi
+done

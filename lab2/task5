@@ -1,0 +1,29 @@
+#!/bin/bash
+rm t5.txt
+touch t5.txt
+average=0
+count=1
+cur=0
+sum=0
+echo -e "$(<t4.txt)\n" | sed "s/[^0-9.]\+/ /g" | sed "s/^ //g" |
+while read str;
+do
+	pid=$(awk '{print $1}'  <<< $str)
+	ppid=$(awk '{print $2}' <<< $str)
+	art=$(awk '{print $3}' <<< $str)
+	if [[ $ppid == $cur ]];
+	then
+		sum=$(($sum+$art))
+		count=$(($count+1))
+	else
+		average=$(($sum/$count))
+		echo "Average_Sleeping_Children_of_ParentID="$cur" is "$average
+		sum=$art
+		count=1
+		cur=$ppid
+	fi
+	if [[ -n $pid ]];
+	then
+	echo "ProcessID=="$pid" : ParentProcessID="$ppid" : Average_Running_Time="$art
+	fi
+done > t5.txt

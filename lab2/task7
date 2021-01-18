@@ -1,0 +1,13 @@
+#!/bin/bash
+sleep 10
+for pc in $(ps -Ao pid,command | tail -n +2 | awk '{print $1":"$2}');
+do
+	pid=$(echo $pc | awk -F ":" '{print $1}')
+	com=$(echo $pc | awk -F ":" '{print $2}')
+	file="/proc/"$pid
+	if [ -f $file/io ];
+	then
+		bytes=$(grep -h "read_bytes:" $file/io | sed "s/[^0-9]*//")
+		echo $pid":"$com":"$bytes
+	fi
+done | sort -t ':' -nrk3 | head -3 > t7.txt

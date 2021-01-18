@@ -1,0 +1,6 @@
+#!/bash/bin
+nice -n 19 ~/labs/lab3/task4.inf &
+~/labs/lab3/task4.inf &
+~/labs/lab3/task4.inf &
+at now +1 minute <<< "kill $!"
+at now +2 minute <<< "killall task4.inf"

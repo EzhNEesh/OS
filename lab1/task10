@@ -1,0 +1,5 @@
+#!/bin/bash
+touch buf
+man bash > buf
+sed 's/[^[:alpha:]]/\n/g' buf | sed -n '/^.\{4\}/p' | tr "[:upper:]" "[:lower:]" | sort | uniq -c | sort -r | sed 3q
+rm buf

@@ -1,0 +1,15 @@
+#!/bin/bash
+rm result
+rm result.log
+touch result
+touch result.log
+read file war
+while read str
+do
+	if [[ "$str" == *"$war"* ]]
+	then
+		echo $str >> result.log
+	else
+		echo $str >> result
+	fi
+done < $file

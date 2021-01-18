@@ -1,0 +1,20 @@
+#!/bin/bash
+echo $$ > .pid
+MODE="PRINT"
+usr1()
+{
+	MODE="END"
+}
+trap 'usr1' USR1
+while true; do
+	case $MODE in
+	"PRINT")
+		echo "I'm okey" >> log.txt
+		;;
+	"END")
+		echo "I'm died" >> log.txt
+		exit 1
+		;;
+	esac
+	sleep 1
+done
