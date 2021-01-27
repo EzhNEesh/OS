@@ -1,0 +1,9 @@
+3.1
+net start > C:\LAB6\list3.1.txt			//sc queryex type=service state=all
+3.2
+echo net stop Dnscache > C:\LAB6\stop_cl.bat
+echo timeout /t 40 >> C:\LAB6\stop_cl.bat
+echo net start > C:\LAB6\list3.2.txt >> C:\LAB6\stop_cl.bat
+echo call C:\LAB6\find_dif.bat >> C:\LAB6\stop_cl.bat
+echo net start Dnscache >> C:\LAB6\stop_cl.bat
+echo fc C:\LAB6\list3.1.txt C:\LAB6\list3.2.txt > C:\LAB6\differents.txt > C:\LAB6\find_dif.bat
