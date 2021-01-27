@@ -1,4 +1,0 @@
-4.1
-DriverQuery /FO TABLE /NH > C:\LAB6\DRIVERS.txt
-4.2
-sort /r C:\LAB6\DRIVERS.txt > C:\LAB6\SORTED.txt
