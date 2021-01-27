@@ -1,0 +1,49 @@
+#!/bin/bash
+pid=0
+if [[ $# != 0 ]];
+then
+	cat .hystory.txt
+	exit 0
+fi
+fl=0
+echo "$(cat .hystory.txt | tail -n +2)" > .hystory.txt
+echo "$(ps -o pid | tail -n +2)" > .bufpid.txt
+while read line
+do
+	case $line in
+	"----------------")
+		if [[ $fl -eq 1 ]];
+		then
+			echo "EEE"
+			fl=0
+			echo "$pid $(top -p $pid -b -n 1 | head -8 | tail -n +8 | awk '{print $10}')" >> .buf.txt
+		fi
+		echo $line >> .buf.txt
+		;;
+	*)
+		pid=$(echo "$line" | awk '{print $1}')
+		if [[ ! $(grep -q "$pid" .bufpid.txt) ]];
+		then
+			fl=1
+			echo $line >> .buf.txt
+		fi
+		;;
+	esac
+done < .hystory.txt
+while read line
+do
+	check=$(grep "$line" .buf.txt)
+	if [[ ! $(grep -q "$line" .buf.txt) ]];
+	then
+		str=$(top -p $line -b -n 1 | head -8 | tail -n +8 | awk '{print $10}')
+		if [[ $str != "" ]];
+		then
+			echo "----------------" >> .buf.txt
+			echo "$line $str" >> .buf.txt
+		fi
+	fi
+done < .bufpid.txt
+echo "PID  MEM" > .hystory.txt
+cat .buf.txt >> .hystory.txt
+rm .bufpid.txt
+rm .buf.txt
